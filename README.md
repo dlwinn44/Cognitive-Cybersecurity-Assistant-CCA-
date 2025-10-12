@@ -38,6 +38,8 @@ Cognitive-Cybersecurity-Assistant/
 │   └── (system architecture diagrams)
 └── LICENSE
 ```
+## 🚧 Draft Code Notice
+Files in the `drafts/` folder are prototypes or experimental versions. They are not optimized for production and may contain incomplete or untested features.
 
 ## 🔮 Future Work
 - Develop system architecture diagrams
