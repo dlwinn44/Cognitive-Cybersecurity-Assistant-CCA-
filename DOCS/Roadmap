@@ -1,0 +1,68 @@
+# Cognitive Cybersecurity Assistant (CCA) - Roadmap
+
+## Current Status
+- **Phishing Detection Assistant** prototype completed.
+- Detects phishing in user-input messages using a trained ML model.
+- Streamlit UI with confidence scores.
+- Ready for next module development.
+
+---
+
+## Roadmap
+
+### 1. Core Functionality
+- [x] **Message-based Phishing Detection**  
+  - Analyze user-entered text for phishing.
+  - Display prediction and confidence.
+
+### 2. Next Module: Email Inbox Scanning
+- [ ] **Email Integration**  
+  - Connect to email providers (Gmail, Outlook, etc.).
+  - Fetch and display inbox messages.
+  - Scan emails for phishing using the existing model.
+  - Mark and report suspicious emails.
+
+### 3. User Experience Enhancements
+- [ ] **Batch Analysis**  
+  - Allow users to analyze multiple messages/emails at once.
+- [ ] **Dashboard & Reporting**  
+  - Visualize detection statistics.
+  - Show history of analyzed messages.
+
+### 4. Feedback & Learning
+- [ ] **User Feedback System**  
+  - Users can mark false positives/negatives.
+  - Collect feedback to improve model accuracy.
+
+### 5. Security & Privacy
+- [ ] **Data Handling**  
+  - Ensure user data is processed securely.
+  - Add privacy policy and data usage notice.
+
+### 6. Deployment & Collaboration
+- [ ] **Dockerization**  
+  - Containerize the app for easy deployment.
+- [ ] **Cloud Hosting**  
+  - Deploy on cloud platforms (Azure, AWS, etc.).
+- [ ] **Documentation**  
+  - Expand README and module docs.
+  - Add setup, usage, and contribution guidelines.
+
+### 7. Future Features
+- [ ] **Automated Alerts**  
+  - Notify users of detected phishing attempts.
+- [ ] **Integration with Other Communication Channels**  
+  - Support for SMS, chat apps, etc.
+- [ ] **Model Updates**  
+  - Periodically retrain and update the phishing detection model.
+
+---
+
+## Next Steps
+- Begin prototyping the **Email Inbox Scanning** module.
+- Research and select email APIs/libraries (e.g., `imaplib`, `exchangelib`, `google-api-python-client`).
+- Design UI for inbox display and scanning.
+
+---
+
+*Note: Email inbox scanning is a priority for the next module. All future features will be planned and implemented iteratively.*
