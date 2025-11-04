@@ -1,0 +1,71 @@
+import time
+import random
+from datetime import datetime
+
+# Configurable thresholds
+SUSPICIOUS_LOGIN_ATTEMPTS = 3  # Threshold for failed login attempts
+UNUSUAL_DATA_ACCESS = 5  # Threshold for unusual data access
+
+# Simulated user activity log
+user_activity_log = []
+
+def log_activity(user_id, activity_type, details):
+    """Logs user activity with a timestamp."""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    user_activity_log.append({
+        "timestamp": timestamp,
+        "user_id": user_id,
+        "activity_type": activity_type,
+        "details": details
+    })
+
+def detect_suspicious_activity():
+    """Detects any suspicious activity based on logs."""
+    user_summary = {}
+    
+    for entry in user_activity_log:
+        user_id = entry["user_id"]
+        activity_type = entry["activity_type"]
+        
+        if user_id not in user_summary:
+            user_summary[user_id] = {
+                "failed_logins": 0,
+                "data_access_count": 0
+            }
+        
+        if activity_type == "failed_login":
+            user_summary[user_id]["failed_logins"] += 1
+        elif activity_type == "data_access":
+            user_summary[user_id]["data_access_count"] += 1
+            
+    # Analyze user summaries for suspicious behavior
+    for user_id, activity in user_summary.items():
+        if activity["failed_logins"] >= SUSPICIOUS_LOGIN_ATTEMPTS:
+            print(f"⚠️ ALERT: User {user_id} has suspicious login activities. Failed logins: {activity['failed_logins']}")
+        
+        if activity["data_access_count"] > UNUSUAL_DATA_ACCESS:
+            print(f"⚠️ ALERT: User {user_id} accessed data unusually high times. Access count: {activity['data_access_count']}")
+
+def simulate_user_activity():
+    """Simulate user activities for testing."""
+    user_ids = ["userA", "userB", "userC"]
+    activities = ["successful_login", "failed_login", "data_access"]
+
+    for _ in range(20):  # Simulate 20 user actions
+        user_id = random.choice(user_ids)
+        activity = random.choice(activities)
+        
+        if activity == "failed_login" and random.random() > 0.5:
+            log_activity(user_id, activity, "Invalid credentials")
+
+        elif activity == "data_access":
+            log_activity(user_id, activity, "Accessed confidential data")
+        
+        else:  # Successful login or other activities
+            log_activity(user_id, "successful_login", "Logged in successfully")
+
+        time.sleep(0.5)  # Simulate time gaps between actions
+
+if __name__ == "__main__":
+    simulate_user_activity()  # Simulate some user activity logs
+    detect_suspicious_activity()  # Check for suspicious activities
