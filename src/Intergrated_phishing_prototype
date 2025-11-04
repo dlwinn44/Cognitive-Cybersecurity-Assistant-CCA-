@@ -1,0 +1,78 @@
+
+### Integrated Email Scanning Script
+
+Here's how you could start implementing the email scanning functionality in a new file called `email_scanner.py`. You can combine it with your existing `phishing_ui.py` later if needed.
+
+#### email_scanner.py
+```python
+import os
+import base64
+import time
+import joblib
+import imaplib
+import email
+from email.header import decode_header
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+
+# Load the trained phishing detection model
+model = joblib.load("src/phishing_model.pkl")  # Adjust the path as necessary
+
+
+# Authenticate with Gmail
+def authenticate_gmail():
+  SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+  creds = None
+  if os.path.exists('token.json'):
+      creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+  if not creds or not creds.valid:
+      if creds and creds.expired and creds.refresh_token:
+          creds.refresh(Request())
+      else:
+          flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+          creds = flow.run_local_server(port=0)
+  return creds
+
+
+def decode_email_body(part):
+  """Decode the email body."""
+  if part.get_content_type() == 'text/plain':
+      return part.get_payload(decode=True).decode('utf-8')
+  return ""
+
+
+def process_new_emails():
+  service = authenticate_gmail()
+  # Connection details for Gmail API
+  imap_host = 'imap.gmail.com'
+  mail = imaplib.IMAP4_SSL(imap_host)
+  mail.login(service.username, service.token)
+
+  mail.select("inbox")
+  result, data = mail.search(None, 'UNSEEN')  # Fetch unread emails
+  email_ids = data[0].split()
+
+  for email_id in email_ids:
+      res, msg = mail.fetch(email_id, '(RFC822)')
+      msg = email.message_from_bytes(msg[0][1])
+      email_body = ""
+
+      # Iterate through the email parts
+      for part in msg.walk():
+          email_body += decode_email_body(part)
+
+      # Analyze the email using the phishing detection model
+      prediction = model.predict([email_body])[0]
+      if prediction == 1:
+          print(f"PHISHING: {msg['Subject']}")
+      else:
+          print(f"LEGITIMATE: {msg['Subject']}")
+
+      time.sleep(2)  # Delay to avoid overwhelming the server
+
+
+if __name__ == '__main__':
+  while True:
+      process_new_emails()
+      time.sleep(60)  # Check for new emails every minute
